@@ -39,9 +39,11 @@ Install python GPIO libraries
 
 Now to download and install the Nokia LCD python library code and examples, execute the following commands:
 
-`git clone https://github.com/sourcexplained/NokiaLCD.git
+```
+git clone https://github.com/sourcexplained/NokiaLCD.git
 cd NokiaLCD
-sudo python setup.py install`
+sudo python setup.py install
+```
 
 Test the sample files
 
