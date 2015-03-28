@@ -1,0 +1,74 @@
+#!/usr/bin/python
+
+from NokiaLCD import NokiaLCD
+from subprocess import *
+from time import sleep, strftime
+
+from datetime import datetime
+import psutil
+
+lcd = NokiaLCD()
+
+status_cmd="wpa_cli -iwlan0 status"
+cmd = "ip addr show wlan0 | grep inet | awk '{print $2}' | cut -d/ -f1 2>/dev/null"
+ipaddr = ""
+
+lcd.begin()
+lcd.clear()
+
+def run_cmd(cmd):
+    p = Popen(cmd, shell=True, stdout=PIPE)
+    output = p.communicate()[0]
+    return output
+
+
+# main function
+def main():
+  ipaddr = run_cmd(status_cmd)
+  print("\nNetwork status:\n%s"%(ipaddr))
+
+  # check ip address only every 10 minutes
+  checkIP = 600
+  checkIPcount = 0
+  ipaddr = ""
+  cpu = 0
+  mem = 0
+  dsk = 0
+  while 1:
+
+    lcd.text(datetime.now().strftime(' %a, %b %d'), row = 0, align = NokiaLCD.AlignRight)
+    lcd.text(datetime.now().strftime(' %H:%M:%S'), row = 1, align = NokiaLCD.AlignRight)
+
+
+    # Eval
+
+
+    # Ip Address
+    if(not ipaddr or checkIP < checkIPcount):
+        checkIPcount = 0
+        ipaddr = run_cmd(cmd).strip()
+
+    # CPU
+    cpu = 100 - int(psutil.cpu_times_percent(interval=1, percpu=False).idle)
+    # Mem
+    mem = int(psutil.virtual_memory().percent)
+    # Dsk
+    dsk = int(psutil.disk_usage('/').percent)
+
+    if not ipaddr:
+      lcd.text('Connecting... ', row = 3)
+    else:
+      lcd.text('%s' % (ipaddr), row = 3, align = NokiaLCD.AlignRight)
+
+    lcd.text('C%2i%% M%2i%% D%2i%%' % (cpu, mem, dsk), row = 4)
+    lcd.text('%2i%% M%2i%% D%2i%%' % (cpu, mem, dsk), row = 4)
+
+#    sleep(1)
+    checkIPcount += 1
+
+
+
+
+
+if __name__=="__main__":
+    main()

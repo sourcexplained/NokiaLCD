@@ -1,0 +1,8 @@
+setup.py
+NokiaLCD/NokiaLCD.py
+NokiaLCD/__init__.py
+NokiaLCD.egg-info/PKG-INFO
+NokiaLCD.egg-info/SOURCES.txt
+NokiaLCD.egg-info/dependency_links.txt
+NokiaLCD.egg-info/requires.txt
+NokiaLCD.egg-info/top_level.txt

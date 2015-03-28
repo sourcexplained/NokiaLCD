@@ -1,0 +1,54 @@
+### BEGIN INIT INFO
+# Provides: LCD - date | time | ip address | cpu | mem | dsk | net
+# Required-Start: $remote_fs $syslog
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Real Time Info Display
+# Description: date | time | ip address | cpu | mem | dsk | n
+### END INIT INFO
+# Usage:
+#   Make sure the the application executable chmod +x <filename>
+#   In this file:
+#     Update the exec path
+#     Update the exec filename
+#   
+#   sudo cp script /etc/init.d/
+#   sudo chmod 755 /etc/init.d/script
+#   
+#   sudo update-rc.d script defaults
+#
+# To remove:
+#   sudo update-rc.d -f script remove  
+# note: this will not remove the script from /etc/init.d/
+###
+ 
+#! /bin/sh
+ 
+SERVICE_NAME="LCD Info"
+EXEC_ABSPATH=/home/pi/projects/NokiaLCD/services
+EXEC_FILENAME=lcdInfo.py
+export HOME
+case "$1" in
+    start)
+        echo "Starting $SERVICE_NAME"
+        $EXEC_ABSPATH/$EXEC_FILENAME 2>&1 &
+    ;;
+    stop)
+        echo "Stopping $SERVICE_NAME"
+        PID=`ps auxwww | grep $EXEC_FILENAME | head -1 | awk '{print $2}'`
+        kill -9 $PID
+    ;;
+    restart)
+        echo "Restart $SERVICE_NAME"        
+        PID=`ps auxwww | grep $EXEC_FILENAME | head -1 | awk '{print $2}'`
+        kill -9 $PID        
+        $EXEC_ABSPATH/$EXEC_FILENAME 2>&1 &        
+        echo "Started $SERVICE_NAME"
+    ;;
+    *)
+        echo "Usage: /etc/init.d/lcd {start|stop|restart}"
+        exit 1
+    ;;
+esac
+exit 0

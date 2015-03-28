@@ -1,0 +1,2 @@
+Adafruit-GPIO>=0.1.0
+PIL
